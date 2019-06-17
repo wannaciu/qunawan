@@ -266,7 +266,7 @@
 
                 if (self.options.readonly) {
 
-                    // do not react to click events if rating is read-only
+                    // dao not react to click events if rating is read-only
                     disableClicks($all);
 
                 } else {
