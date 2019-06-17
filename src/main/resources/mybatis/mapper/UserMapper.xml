@@ -9,6 +9,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>	
 	
 	<select id="checkUser" parameterType="user" resultType="Boolean">
-		select * from user where phone=#{name} or email=#{name} and password = #{password}
+		select * from user where phone=#{username} or email=#{username} and password = #{password}
 	</select>
 </mapper>
