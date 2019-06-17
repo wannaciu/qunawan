@@ -8,7 +8,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from tbl_admin where id = #{userid}
 	</select>	
 	
-	<select id="checkUser" parameterType="user" resultType="Boolean">
-		select * from user where phone=#{username} or email=#{username} and password = #{password}
+	<select id="checkUser" parameterType="user" resultType="com.springboot.qunawan.pojo.User">
+		select * from user where phone=#{name} or email=#{name} and password = #{password}
 	</select>
+	<select id="checkPhone" parameterType="String" resultType="com.springboot.qunawan.pojo.User">
+		select * from user where phone=#{phone}
+	</select>
+	<select id="checkEmail" parameterType="String" resultType="com.springboot.qunawan.pojo.User">
+		select * from user where email=#{email}
+	</select>
+	<insert id="sign" parameterType="user">
+		insert into user (phone,password,name,email) value(#{phone},#{password},#{name},#{email})
+	</insert>
 </mapper>
