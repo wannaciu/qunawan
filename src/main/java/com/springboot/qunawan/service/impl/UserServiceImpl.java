@@ -20,9 +20,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Boolean login(User user) {
+	public User login(User user) {
 		// TODO Auto-generated method stub
-		return userMapper.checkUser(user) != null ? true : false;
+		return userMapper.checkUser(user);
 	}
 
+	@Override
+	public Boolean checkPhone(String phone) {
+		if(userMapper.checkPhone(phone)!=null)
+			return true;
+		return false;
+	}
+
+	@Override
+	public Boolean checkEmail(String email) {
+		if(userMapper.checkPhone(email)!=null)
+			return true;
+		return false;
+	}
+
+	@Override
+	public void sign(User user) {
+		userMapper.sign(user);
+	}
 }

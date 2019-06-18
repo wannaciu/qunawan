@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.springboot")
+@MapperScan("com.springboot.qunawan.dao")
 public class QunawanApplication {
 
     public static void main(String[] args) {

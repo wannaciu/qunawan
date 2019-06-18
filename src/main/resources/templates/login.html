@@ -16,7 +16,109 @@
 	<link type="text/css" rel="stylesheet" th:href="@{/css/login.css}" />
 	<script type="text/javascript" src="js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="js/pages/login/login.js"></script>
+	<script>
 
+		var flag=1
+		var flag_phone=0
+		var flag_email=0
+		var flag_password=0
+		// 检测注册操作
+		function doSign() {
+			if(flag_phone==1&&flag_email==1&&flag_password==1)
+				return true;
+			return false
+		}
+		// 切换登录和注册页面
+		function change() {
+			if (flag==1){
+				$("#title").text("Sign Up")
+				$("#login_form").attr("style","display: none;")
+				$("#sign_form").attr("style","")
+				flag=2
+			}
+			else
+			{
+				$("#title").text("Login")
+				$("#login_form").attr("style","")
+				$("#sign_form").attr("style","display: none;")
+				flag=1
+			}
+		}
+		// 输入框聚焦失焦进行ajax判定是否可以注册
+		$(function(){
+		$("#phone").focus(function () {
+
+			$("#msg1").text("")
+		});
+		$("#phone").blur(function () {
+			if($("#phone").val()!=""&&$("#phone").val()!=null) {
+				$.ajax({
+					url: "/user/check_phone",
+					data: {"phone": $('#phone').val()},
+					type: "POST",
+					dataType: "TEXT",
+					success: function (data) {
+						if (data == "false") {
+							flag_phone = 0
+							$("#msg1").text("手机已重复")
+						}
+						if (data == "true") {
+							flag_phone = 1
+							$("#msg1").text("可以")
+						}
+					}
+				});
+			}
+		});
+
+		$("#email").focus(function () {
+			$("#msg2").text("")
+		});
+		$("#email").blur(function () {
+			if($("#email").val()!=""&&$("#email").val()!=null)
+			{
+			$.ajax({
+				url: "/user/check_email",
+				data: {"phone": $('#email').val()},
+				type: "POST",
+				dataType: "TEXT",
+				success: function (data) {
+					if (data == "false") {
+						flag_email = 0
+						$("#msg2").text("邮箱已重复")
+					}
+					if (data == "true") {
+						flag_email = 1
+						$("#msg2").text("可以")
+					}
+				}
+			});
+			}
+		});
+
+		$("#password1").focus(function () {
+
+		});
+		$("#password1").blur(function () {
+
+		});
+
+		$("#password2").focus(function () {
+			$("#msg3").text("")
+		});
+		$("#password2").blur(function () {
+			if($("#password1").val()!=null && $("#password1").val()!="" && $("#password2").val()!=null && $("#password2").val()!="")
+			{
+				if($("#password1").val()!=$("#password2").val())
+				{
+					$("#msg3").text("两次不一致")
+					flag_password=0;
+				}
+				flag_password=1;
+			}
+		});
+		})
+	</script>
 
 </head>
 
@@ -27,16 +129,17 @@
 			<div class="content-wrapper full-page-wrapper d-flex align-items-center auth-pages">
 				<div class="card col-lg-4 mx-auto">
 					<div class="card-body px-5 py-5">
-						<h3 class="card-title text-left mb-3">Login</h3>
-						<form action="/user/login" method="post">
+						<h3 id="title" class="card-title text-left mb-3">Login</h3>
+						<form id="login_form" action="/user/login" method="post">
 							<div class="form-group">
 								<label>Phone or email *</label>
-								<input type="text" class="form-control p_input" name="username" required>
+								<input  type="text" class="form-control p_input" name="name" required>
 							</div>
 							<div class="form-group">
 								<label>Password *</label>
 								<input type="text" class="form-control p_input" name="password" required>
 							</div>
+
 							<div class="form-group d-flex align-items-center justify-content-between">
 								<div class="form-check">
 									<label class="form-check-label">
@@ -57,7 +160,36 @@
 									<i class="mdi mdi-google-plus"></i> Google plus
 								</button>
 							</div>
-							<p class="sign-up">Don't have an Account?<a href="#"> Sign Up</a></p>
+							<p class="sign-up">Don't have an Account?<a onclick="change()"> Sign Up</a></p>
+						</form>
+
+						<form id="sign_form" action="/user/sign" method="post" style="display: none;">
+							<div class="form-group">
+								<label>Phone*</label><label id="msg1"></label>
+								<input id="phone" type="text" class="form-control p_input" name="phone" required>
+							</div>
+							<div class="form-group">
+								<label>email*</label><label id="msg2"></label>
+								<input id="email" type="text" class="form-control p_input" name="email" required>
+							</div>
+							<div class="form-group">
+								<label>name*</label>
+								<input id="name" type="text" class="form-control p_input" name="name" required>
+							</div>
+							<div class="form-group" name="password">
+								<label>Password *</label>
+								<input id="password1" type="text" class="form-control p_input" name="password" required>
+							</div>
+
+							<div class="form-group">
+								<label>Confirm Password *</label><label id="msg3" ></label>
+								<input id="password2"type="text" class="form-control p_input" name="confirm_password" required>
+							</div>
+
+							<div class="text-center">
+								<button id="action_button" type="submit" class="btn btn-primary btn-block enter-btn" onclick="return doSign()">Sign Up</button>
+							</div>
+							<p class="sign-up">Ready?<a onclick="change()"> Login </a></p>
 						</form>
 					</div>
 				</div>
