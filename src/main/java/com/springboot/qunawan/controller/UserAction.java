@@ -20,6 +20,8 @@ public class UserAction {
     UserService userService;
     @RequestMapping("/login")
     public String login(User user, HttpServletRequest request, Model model) {
+        if (user.getName()==null)
+            return "redirect:/";
         String username = user.getName();
         String password = user.getPassword();
         password=MD5(password);
@@ -33,6 +35,7 @@ public class UserAction {
             model.addAttribute("user",u);
             return "welcome";
         }
+        model.addAttribute("msg","登录失败,账号/密码错误");
         return "login";
     }
 
@@ -40,6 +43,7 @@ public class UserAction {
     public String sign(User user, HttpServletRequest request, Model model) {
         user.setPassword(MD5(user.getPassword()));
         userService.sign(user);
+        model.addAttribute("msg","注册成功");
         return "login";
     }
 
