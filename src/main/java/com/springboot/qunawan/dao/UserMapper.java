@@ -48,4 +48,6 @@ public interface UserMapper {
     User checkPhone(String phone);
     User checkEmail(String email);
     int sign(User user);
+    int updatepsw(User user);
+    int updateuser(User user);
 }

@@ -18,7 +18,6 @@
 	<script type="text/javascript" src="js/pages/login/login.js"></script>
 	<script>
 		var flag_code=0
-
 		var flag=1
 		var flag_phone=0
 		var flag_email=0
@@ -79,91 +78,91 @@
 				});
 			})
 
-		$("#phone").focus(function () {
+			$("#phone").focus(function () {
 
-			flag_phone=0
-			check();
-			$("#msg1").text("")
-		});
-		$("#phone").blur(function () {
-			if($("#phone").val()!=""&&$("#phone").val()!=null) {
-				$.ajax({
-					url: "/user/check_phone",
-					data: {"phone": $('#phone').val()},
-					type: "POST",
-					dataType: "TEXT",
-					success: function (data) {
-						if (data == "false") {
-							flag_phone = 0
-							$("#msg1").text("手机已重复")
+				flag_phone=0
+				check();
+				$("#msg1").text("")
+			});
+			$("#phone").blur(function () {
+				if($("#phone").val()!=""&&$("#phone").val()!=null) {
+					$.ajax({
+						url: "/user/check_phone",
+						data: {"phone": $('#phone').val()},
+						type: "POST",
+						dataType: "TEXT",
+						success: function (data) {
+							if (data == "false") {
+								flag_phone = 0
+								$("#msg1").text("手机已重复")
+							}
+							if (data == "true") {
+								flag_phone = 1
+								$("#msg1").text("可以")
+							}
+							check();
 						}
-						if (data == "true") {
-							flag_phone = 1
-							$("#msg1").text("可以")
-						}
-						check();
-					}
-				});
+					});
 
-			}
-		});
-
-		$("#email").focus(function () {
-			flag_email=0
-			check();
-			$("#msg2").text("")
-		});
-		$("#email").blur(function () {
-			if($("#email").val()!=""&&$("#email").val()!=null)
-			{
-			$.ajax({
-				url: "/user/check_email",
-				data: {"phone": $('#email').val()},
-				type: "POST",
-				dataType: "TEXT",
-				success: function (data) {
-					if (data == "false") {
-						flag_email = 0
-						$("#msg2").text("邮箱已重复")
-					}
-					if (data == "true") {
-						flag_email = 1
-						$("#msg2").text("可以")
-					}
-					check();
 				}
-
 			});
 
-			}
-		});
-
-		$("#password1").focus(function () {
-			check();
-		});
-		$("#password1").blur(function () {
-			check();
-		});
-
-		$("#password2").focus(function () {
-			flag_password=0
-			check();
-			$("#msg3").text("")
-		});
-		$("#password2").blur(function () {
-			if($("#password1").val()!=null && $("#password1").val()!="" && $("#password2").val()!=null && $("#password2").val()!="")
-			{
-				if($("#password1").val()!=$("#password2").val())
+			$("#email").focus(function () {
+				flag_email=0
+				check();
+				$("#msg2").text("")
+			});
+			$("#email").blur(function () {
+				if($("#email").val()!=""&&$("#email").val()!=null)
 				{
-					flag_password=0;
-					$("#msg3").text("两次不一致")
+					$.ajax({
+						url: "/user/check_email",
+						data: {"phone": $('#email').val()},
+						type: "POST",
+						dataType: "TEXT",
+						success: function (data) {
+							if (data == "false") {
+								flag_email = 0
+								$("#msg2").text("邮箱已重复")
+							}
+							if (data == "true") {
+								flag_email = 1
+								$("#msg2").text("可以")
+							}
+							check();
+						}
+
+					});
+
 				}
-				else {
-					flag_password=1;
+			});
+
+			$("#password1").focus(function () {
+				check();
+			});
+			$("#password1").blur(function () {
+				check();
+			});
+
+			$("#password2").focus(function () {
+				flag_password=0
+				check();
+				$("#msg3").text("")
+			});
+			$("#password2").blur(function () {
+				if($("#password1").val()!=null && $("#password1").val()!="" && $("#password2").val()!=null && $("#password2").val()!="")
+				{
+					if($("#password1").val()!=$("#password2").val())
+					{
+						flag_password=0;
+						$("#msg3").text("两次不一致")
+					}
+					else {
+						flag_password=1;
+					}
 				}
-			}
-			check();
-		});
+				check();
+			});
 		})
 	</script>
 

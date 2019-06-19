@@ -54,7 +54,6 @@ public class CodeAction {
         return "true";
     }
     @RequestMapping("/code.jhtml")
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置请求头为gif的图片类型
         response.setContentType("image/gif");
