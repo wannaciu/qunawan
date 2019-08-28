@@ -17,16 +17,23 @@
 	<script type="text/javascript" src="js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="js/pages/login/login.js"></script>
 	<script>
-
+		var flag_code=0
 		var flag=1
 		var flag_phone=0
 		var flag_email=0
 		var flag_password=0
 		// 检测注册操作
-		function doSign() {
+		function check() {
 			if(flag_phone==1&&flag_email==1&&flag_password==1)
-				return true;
-			return false
+			{
+				$("#action_button").prop('disabled',"")
+				return;
+			}
+			else
+			{
+				$("#action_button").prop('disabled',"disabled")
+			}
+
 		}
 		// 切换登录和注册页面
 		function change() {
@@ -46,77 +53,116 @@
 		}
 		// 输入框聚焦失焦进行ajax判定是否可以注册
 		$(function(){
-		$("#phone").focus(function () {
-
-			$("#msg1").text("")
-		});
-		$("#phone").blur(function () {
-			if($("#phone").val()!=""&&$("#phone").val()!=null) {
+			$("#ident").focus(function () {
+				$("#login").prop("disabled","disabled")
+			})
+			$("#ident").blur(function () {
 				$.ajax({
-					url: "/user/check_phone",
-					data: {"phone": $('#phone').val()},
+					url: "/check_code.jhtml",
+					data: {"code": $('#ident').val()},
 					type: "POST",
 					dataType: "TEXT",
 					success: function (data) {
 						if (data == "false") {
-							flag_phone = 0
-							$("#msg1").text("手机已重复")
+							flag_code = 0
+							$("#login").prop("disabled","disabled")
+							$("#msg").text("验证码错误")
 						}
 						if (data == "true") {
-							flag_phone = 1
-							$("#msg1").text("可以")
+							flag_code = 1
+							$("#login").prop("disabled","")
+							$("#msg").text("验证码正确")
 						}
+
 					}
 				});
-			}
-		});
+			})
 
-		$("#email").focus(function () {
-			$("#msg2").text("")
-		});
-		$("#email").blur(function () {
-			if($("#email").val()!=""&&$("#email").val()!=null)
-			{
-			$.ajax({
-				url: "/user/check_email",
-				data: {"phone": $('#email').val()},
-				type: "POST",
-				dataType: "TEXT",
-				success: function (data) {
-					if (data == "false") {
-						flag_email = 0
-						$("#msg2").text("邮箱已重复")
-					}
-					if (data == "true") {
-						flag_email = 1
-						$("#msg2").text("可以")
-					}
+			$("#phone").focus(function () {
+
+				flag_phone=0
+				check();
+				$("#msg1").text("")
+			});
+			$("#phone").blur(function () {
+				if($("#phone").val()!=""&&$("#phone").val()!=null) {
+					$.ajax({
+						url: "/user/check_phone",
+						data: {"phone": $('#phone').val()},
+						type: "POST",
+						dataType: "TEXT",
+						success: function (data) {
+							if (data == "false") {
+								flag_phone = 0
+								$("#msg1").text("手机已重复")
+							}
+							if (data == "true") {
+								flag_phone = 1
+								$("#msg1").text("可以")
+							}
+							check();
+						}
+					});
+
 				}
 			});
-			}
-		});
 
-		$("#password1").focus(function () {
-
-		});
-		$("#password1").blur(function () {
-
-		});
-
-		$("#password2").focus(function () {
-			$("#msg3").text("")
-		});
-		$("#password2").blur(function () {
-			if($("#password1").val()!=null && $("#password1").val()!="" && $("#password2").val()!=null && $("#password2").val()!="")
-			{
-				if($("#password1").val()!=$("#password2").val())
+			$("#email").focus(function () {
+				flag_email=0
+				check();
+				$("#msg2").text("")
+			});
+			$("#email").blur(function () {
+				if($("#email").val()!=""&&$("#email").val()!=null)
 				{
-					$("#msg3").text("两次不一致")
-					flag_password=0;
+					$.ajax({
+						url: "/user/check_email",
+						data: {"phone": $('#email').val()},
+						type: "POST",
+						dataType: "TEXT",
+						success: function (data) {
+							if (data == "false") {
+								flag_email = 0
+								$("#msg2").text("邮箱已重复")
+							}
+							if (data == "true") {
+								flag_email = 1
+								$("#msg2").text("可以")
+							}
+							check();
+						}
+
+					});
+
 				}
-				flag_password=1;
-			}
-		});
+			});
+
+			$("#password1").focus(function () {
+				check();
+			});
+			$("#password1").blur(function () {
+				check();
+			});
+
+			$("#password2").focus(function () {
+				flag_password=0
+				check();
+				$("#msg3").text("")
+			});
+			$("#password2").blur(function () {
+				if($("#password1").val()!=null && $("#password1").val()!="" && $("#password2").val()!=null && $("#password2").val()!="")
+				{
+					if($("#password1").val()!=$("#password2").val())
+					{
+						flag_password=0;
+						$("#msg3").text("两次不一致")
+					}
+					else {
+						flag_password=1;
+					}
+				}
+				check();
+			});
 		})
 	</script>
 
@@ -139,6 +185,18 @@
 								<label>Password *</label>
 								<input type="text" class="form-control p_input" name="password" required>
 							</div>
+							<div class="form-group">
+								<label>验证码</label></br>
+									<input type="text" name="code" id="ident" class="text identify form-control p_input" style="">
+								<span class="identifying">
+									<img src="/code.jhtml" width="120px" height="40px" onclick="javascript:this.src='/code.jhtml?id='+new Date().getMilliseconds()">
+								</span>
+							</div>
+							<label id="msg">
+								<td th:text="${msg}"></td>
+							</label>
+
+
 
 							<div class="form-group d-flex align-items-center justify-content-between">
 								<div class="form-check">
@@ -150,7 +208,7 @@
 								<a href="#" class="forgot-pass">Forgot password</a>
 							</div>
 							<div class="text-center">
-								<button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
+								<button type="submit" id="login" class="btn btn-primary btn-block enter-btn" disabled="disabled">Login</button>
 							</div>
 							<div class="d-flex">
 								<button class="btn btn-facebook mr-2 col">
@@ -187,7 +245,7 @@
 							</div>
 
 							<div class="text-center">
-								<button id="action_button" type="submit" class="btn btn-primary btn-block enter-btn" onclick="return doSign()">Sign Up</button>
+								<button id="action_button" type="submit" class="btn btn-primary btn-block enter-btn" disabled="disabled">Sign Up</button>
 							</div>
 							<p class="sign-up">Ready?<a onclick="change()"> Login </a></p>
 						</form>

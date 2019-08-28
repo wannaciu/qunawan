@@ -8,4 +8,7 @@ public interface UserService {
     public Boolean checkPhone(String phone);
     public Boolean checkEmail(String email);
     public void sign(User user);
+    public Boolean update(User user);
+    public int updatepsw(User user);
+    public int updateuser(User user);
 }

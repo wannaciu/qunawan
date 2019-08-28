@@ -43,4 +43,20 @@ public class UserServiceImpl implements UserService {
 	public void sign(User user) {
 		userMapper.sign(user);
 	}
+
+	@Override
+	public Boolean update(User user) {
+		userMapper.updateByPrimaryKey(user);
+		return true;
+	}
+
+	@Override
+	public int updatepsw(User user) {
+		return userMapper.updatepsw(user);
+	}
+
+	@Override
+	public int updateuser(User user) {
+		return userMapper.updateuser(user);
+	}
 }
